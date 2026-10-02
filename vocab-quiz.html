@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>段考單字複習</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5fb;--card:#fff;--tx:#1b1d2a;--mut:#6b7080;--bd:#dfe2ee;--ac:#4a6cf7;--ok:#10b981;--no:#e84f6b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14162a;--card:#1e2140;--tx:#f1f2fa;--mut:#9a9fbd;--bd:#32365e}}
+:root[data-theme="dark"]{--bg:#14162a;--card:#1e2140;--tx:#f1f2fa;--mut:#9a9fbd;--bd:#32365e}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Noto Sans TC','PingFang TC',system-ui,sans-serif;padding:16px;display:flex;justify-content:center}
+#app{width:100%;max-width:480px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:22px;margin-bottom:12px}
+h1{margin:0 0 4px;font-size:26px}.mut{color:var(--mut);font-size:13px}
+button{font:inherit;color:inherit;cursor:pointer}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.chip{border:1px solid var(--bd);background:var(--card);border-radius:20px;padding:7px 14px;font-size:14px}
+.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.big{width:100%;border:1px solid var(--bd);background:var(--card);border-radius:14px;padding:16px;margin-top:8px;text-align:left}
+.big b{display:block;font-size:17px}
+.q{text-align:center;padding:30px 16px}.q .w{font-size:28px;font-weight:800;margin:0}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{border:1px solid var(--bd);background:var(--card);border-radius:14px;padding:14px 10px;text-align:left;font-weight:700;word-break:break-word}
+.opt.ok{background:rgba(16,185,129,.18);border-color:var(--ok)}.opt.no{background:rgba(232,79,107,.18);border-color:var(--no)}.opt.dim{opacity:.4}
+.bar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center}
+.go{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700;width:100%;margin-top:8px}
+.go.red{background:var(--no)}.go.ghost{background:none;border:1px solid var(--bd);color:var(--mut)}
+input{width:100%;font:inherit;font-size:18px;padding:14px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);margin-top:6px}
+.fb{margin:10px 0;font-weight:700}.fb.ok{color:var(--ok)}.fb.no{color:var(--no)}
+.wl div{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd);font-size:14px}.wl b{min-width:42%}
+</style></head><body><div id="app"></div>
+<script>
+const A=`petty|小的
+chaos|混亂
+shield|盾牌
+outsider|局外人
+unemployment|失業
+burial|埋葬
+dough|生麵團
+complication|併發症
+mattress|床墊
+grant|答應
+curriculum|課程
+sandal|涼鞋
+vocal|發聲
+smog|霧霾
+bully|惡霸
+climax|高潮
+gravity|重力
+milestone|里程碑
+morality|道德
+mustard|芥末
+stepchild|繼子
+soften|變軟
+compliment|稱讚
+despair|絕望
+wither|枯萎
+stimulate|刺激
+flip|翻轉
+erupt|爆發
+nominate|提名
+implement|實施
+migration|遷移
+rigid|嚴苛
+suburban|郊區
+fragrant|芳香
+deliberate|故意
+terminal|末端
+overwhelm|壓倒
+mortal|會死
+pastry|點心
+straightforward|坦率
+outfit|全套服裝
+script|劇本
+texture|質地
+pedal|踏板
+assumption|假定
+lawsuit|訴訟
+implication|暗示
+fatigue|勞累
+commodity|貨物
+antique|古董
+seminar|研討會
+complexity|困難
+appliance|家電
+vendor|小販
+spouse|配偶
+vinegar|醋
+fabric|布料
+icon|圖像
+syrup|糖漿
+legacy|遺產
+tackle|處理
+yield|產生
+update|新資訊
+upgrade|升級
+compromise|讓步
+embrace|擁抱
+depict|描繪
+maple|楓樹
+supervise|監督
+prohibit|禁止
+grip|緊握
+tick|勾號
+hostile|敵意
+subtle|細微
+ultimate|最終
+contemporary|當代
+structural|結構上
+indispensable|不可或缺
+vague|模糊
+overhead|頭頂上
+rehearsal|預演
+superstition|迷信
+profile|人物簡介
+locker|置物櫃
+squash|南瓜
+currency|貨幣
+recipient|接受者
+respondent|應答者
+scandal|醜聞
+republican|共和主義
+ballot|投票
+realism|務實
+copyright|版權
+rail|鐵路
+scar|疤
+symptom|症狀
+resident|居民
+projection|推測
+circuit|巡迴
+likelihood|可能
+accommodate|容納
+whine|抱怨
+compensate|補償
+applause|掌聲
+plunge|投入
+exclude|排除
+comprise|包含
+smash|砸碎
+peek|偷看
+inherit|繼承
+derive|得到
+chubby|豐滿
+profound|深奧
+compatible|共處
+immense|巨大
+nasty|惡毒
+valid|有效力
+resistant|抗拒
+widespread|普遍
+institution|機構
+tournament|錦標賽
+casino|賭場
+dilemma|兩難
+prejudice|成見
+league|聯盟
+sponsor|贊助商
+bound|界限
+boundary|邊界
+highlight|精采
+intent|意圖
+booth|亭子
+abolish|廢除
+consent|同意
+federal|聯邦
+variation|變化
+criterion|標準
+debut|初次亮相
+reef|礁石
+sportsman|運動家
+deprive|剝奪
+rival|對手
+endorse|代言
+glare|怒視
+resent|憎惡
+adore|非常喜愛
+exceed|超出
+supreme|最高
+strand|擱淺
+simplify|簡化
+convert|轉變
+abnormal|不正常
+masculine|男性
+fabulous|極好
+fluid|液體
+prone|有…傾向
+reverse|反轉
+elaborate|精心設計
+sociable|善於社交
+alongside|與…一起`;
+const B=`journey|旅程
+orbit|繞軌道運行
+theory|理論
+approach|近乎
+countless|數不盡
+demonstrate|顯示
+possess|擁有
+undoubtedly|無疑
+historian|歷史學家
+amazing|極好
+witness|目擊
+fleet|艦隊
+ablaze|起火
+voyage|航海
+affect|影響
+contact|聯繫
+alien|外星人
+speculate|推斷
+chaotic|混亂
+restriction|限制
+threaten|危害
+existence|生存
+consequence|結果
+make use of|利用
+leave…behind|留下
+thanks to|多虧
+in turn|因此
+beyond one's imagination|超乎想像
+for the time being|目前
+remarkable|卓越
+murder|謀殺
+abduct|綁架
+consume|吃，消耗
+confront|面對
+oppression|壓迫
+enlist|爭取
+injustice|不公不義
+extend|提供
+solitary|獨自
+confinement|禁閉
+concept|概念
+dramatic|戲劇
+assistance|援助
+adopt|採用
+non-violence|非暴力
+issue|議題
+demand|需求
+indigenous|本土
+correspondence|信件
+plea|懇求
+commit|致力於
+at risk of|冒著…危險
+be based on|以…為基礎
+over time|經過一段時日
+make a difference|改善
+to date|到目前為止`;
+const parse=(t,s)=>t.split('\n').map(l=>{const[e,z]=l.split('|');return{en:e,zh:z,s}});
+const SETS={A:parse(A,'A'),B:parse(B,'B')};
+const ALL=[...SETS.A,...SETS.B];
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const $=document.getElementById('app');
+const weak=()=>{try{return JSON.parse(localStorage.getItem('weak')||'[]')}catch(e){return[]}};
+const setWeak=a=>{try{localStorage.setItem('weak',JSON.stringify(a))}catch(e){}};
+let sel='all',mode,qs,i,streak,best,res,done;
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function pickSet(){const w=weak();return sel==='A'?SETS.A:sel==='B'?SETS.B:sel==='weak'?ALL.filter(x=>w.includes(x.en)):ALL}
+function home(){
+  const wn=weak().length,n=pickSet().length;
+  $.innerHTML=`<div class="card"><h1>段考單字複習</h1><div class="mut">共 ${ALL.length} 個單字・答錯的會自動記起來</div>
+  <div class="row">${[['all','全部'],['A','單字表 (159)'],['B','課文詞彙 (56)'],['weak','弱項 ('+wn+')']].map(([k,l])=>`<button class="chip ${sel===k?'on':''}" onclick="sel='${k}';home()">${l}</button>`).join('')}</div>
+  <div class="mut">本次範圍：${n} 題</div>
+  ${[['zh2en','中文 → 英文','看中文，選英文'],['en2zh','英文 → 中文','看英文，選中文'],['spell','拼字測驗','看中文，自己打英文']].map(([m,l,d])=>`<button class="big" onclick="start('${m}')"><b>${l}</b><span class="mut">${d}</span></button>`).join('')}</div>`}
+function start(m,words){
+  const w=words||pickSet();if(!w.length){alert('這個範圍沒有單字');return}
+  mode=m;qs=sh(w);i=0;streak=0;best=0;res=[];done=false;quiz()}
+function quiz(){
+  const w=qs[i],pct=(i/qs.length)*100;
+  let body;
+  if(mode==='spell'){body=`<input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="輸入英文" onkeydown="if(event.key==='Enter')spell()"><div id="fb"></div><button class="go" id="act" onclick="spell()">確認</button>`}
+  else{
+    const others=sh(ALL.filter(x=>x.zh!==w.zh&&x.en!==w.en)).slice(0,3);
+    const o=sh([w,...others]);
+    body=`<div class="opts">${o.map((x,k)=>`<button class="opt" data-en="${esc(x.en)}" onclick="pick(this)">${esc(mode==='zh2en'?x.en:x.zh)}</button>`).join('')}</div><div id="fb"></div>`}
+  $.innerHTML=`<div class="top"><button class="chip" onclick="home()">← 返回</button><span class="chip">🔥 ${streak}</span></div>
+  <div class="bar"><i style="width:${pct}%"></i></div><div class="mut" style="text-align:right">${i+1} / ${qs.length}</div>
+  <div class="card q"><p class="w">${esc(mode==='en2zh'?w.en:w.zh)}</p><div class="mut" style="margin-top:8px">${mode==='zh2en'?'選出正確的英文':mode==='en2zh'?'選出正確的中文':'拼出正確的英文'}</div></div>${body}`;
+  if(mode==='spell')document.getElementById('in').focus();
+  done=false}
+function record(ok){
+  const w=qs[i];res.push({w,ok});let wk=weak();
+  if(ok){streak++;best=Math.max(best,streak);wk=wk.filter(x=>x!==w.en)}else{streak=0;if(!wk.includes(w.en))wk.push(w.en)}
+  setWeak(wk)}
+function nextBtn(){const last=i+1>=qs.length;return`<button class="go" onclick="next()">${last?'查看結果':'下一題'} →</button>`}
+function pick(b){
+  if(done)return;done=true;const w=qs[i],ok=b.dataset.en===w.en;
+  document.querySelectorAll('.opt').forEach(x=>{if(x.dataset.en===w.en)x.classList.add('ok');else if(x===b)x.classList.add('no');else x.classList.add('dim')});
+  record(ok);
+  document.getElementById('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ 答對了！':'✗ 正確答案：'+esc(w.en)+'（'+esc(w.zh)+'）'}</div>`+nextBtn()}
+function spell(){
+  if(done){next();return}
+  const w=qs[i],v=document.getElementById('in').value.trim().toLowerCase().replace(/’/g,"'").replace(/\s+/g,' ');
+  if(!v)return;
+  const ans=w.en.toLowerCase().replace('…','...'),ok=v.replace('…','...')===ans||v===w.en.toLowerCase().replace('…','').replace(/\s+/g,' ');
+  done=true;record(ok);
+  document.getElementById('in').disabled=true;
+  document.getElementById('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ 答對了！':'✗ 正確答案：'+esc(w.en)}</div>`;
+  document.getElementById('act').outerHTML=nextBtn()}
+function next(){if(i+1>=qs.length)summary();else{i++;quiz()}}
+function summary(){
+  const c=res.filter(r=>r.ok).length,t=res.length,wr=res.filter(r=>!r.ok),p=Math.round(c/t*100);
+  $.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:52px">${p===100?'🏆':p>=80?'🌟':p>=60?'👍':'💪'}</div><h1>測驗結束</h1>
+  <p>答對 <b>${c}</b>・答錯 <b>${wr.length}</b>・最高連勝 <b>${best}</b></p><div class="bar"><i style="width:${p}%"></i></div><div class="mut">${p}% 正確率</div>
+  <button class="go" onclick="start(mode,${'qs.map(x=>x)'})">🔄 再練一次</button>
+  ${wr.length?`<button class="go red" onclick="start(mode,res.filter(r=>!r.ok).map(r=>r.w))">❌ 只複習錯的（${wr.length}）</button>`:''}
+  <button class="go ghost" onclick="home()">🏠 回首頁</button></div>
+  ${wr.length?`<div class="card wl"><div class="mut">答錯的單字</div>${wr.map(r=>`<div><b>${esc(r.w.en)}</b><span>${esc(r.w.zh)}</span></div>`).join('')}</div>`:''}`}
+home();
+</script></body></html>
