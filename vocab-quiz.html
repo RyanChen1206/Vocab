@@ -261,7 +261,7 @@ function home(){
   $.innerHTML=`<div class="card"><h1>段考單字複習</h1><div class="mut">共 ${ALL.length} 個單字・答錯的會自動記起來</div>
   <div class="row">${[['all','全部'],['A','單字表 (159)'],['B','課文詞彙 (56)'],['weak','弱項 ('+wn+')']].map(([k,l])=>`<button class="chip ${sel===k?'on':''}" onclick="sel='${k}';home()">${l}</button>`).join('')}</div>
   <div class="mut">本次範圍：${n} 題</div>
-  ${[['zh2en','中文 → 英文','看中文，選英文'],['en2zh','英文 → 中文','看英文，選中文'],['spell','拼字測驗','看中文，自己打英文']].map(([m,l,d])=>`<button class="big" onclick="start('${m}')"><b>${l}</b><span class="mut">${d}</span></button>`).join('')}</div>`}
+  ${[['zh2en','中文 → 英文','看中文，選英文'],['en2zh','英文 → 中文','看英文，選中文'],['type','英文 → 打中文','看英文，自己打中文，再自評'],['spell','拼字測驗','看中文，自己打英文']].map(([m,l,d])=>`<button class="big" onclick="start('${m}')"><b>${l}</b><span class="mut">${d}</span></button>`).join('')}</div>`}
 function start(m,words){
   const w=words||pickSet();if(!w.length){alert('這個範圍沒有單字');return}
   mode=m;qs=sh(w);i=0;streak=0;best=0;res=[];done=false;quiz()}
@@ -269,14 +269,15 @@ function quiz(){
   const w=qs[i],pct=(i/qs.length)*100;
   let body;
   if(mode==='spell'){body=`<input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="輸入英文" onkeydown="if(event.key==='Enter')spell()"><div id="fb"></div><button class="go" id="act" onclick="spell()">確認</button>`}
+  else if(mode==='type'){body=`<input id="in" autocomplete="off" placeholder="輸入中文意思" onkeydown="if(event.key==='Enter')tchk()"><div id="fb"></div><button class="go" id="act" onclick="tchk()">看答案</button>`}
   else{
     const others=sh(ALL.filter(x=>x.zh!==w.zh&&x.en!==w.en)).slice(0,3);
     const o=sh([w,...others]);
     body=`<div class="opts">${o.map((x,k)=>`<button class="opt" data-en="${esc(x.en)}" onclick="pick(this)">${esc(mode==='zh2en'?x.en:x.zh)}</button>`).join('')}</div><div id="fb"></div>`}
   $.innerHTML=`<div class="top"><button class="chip" onclick="home()">← 返回</button><span class="chip">🔥 ${streak}</span></div>
   <div class="bar"><i style="width:${pct}%"></i></div><div class="mut" style="text-align:right">${i+1} / ${qs.length}</div>
-  <div class="card q"><p class="w">${esc(mode==='en2zh'?w.en:w.zh)}</p><div class="mut" style="margin-top:8px">${mode==='zh2en'?'選出正確的英文':mode==='en2zh'?'選出正確的中文':'拼出正確的英文'}</div></div>${body}`;
-  if(mode==='spell')document.getElementById('in').focus();
+  <div class="card q"><p class="w">${esc(mode==='en2zh'||mode==='type'?w.en:w.zh)}</p><div class="mut" style="margin-top:8px">${mode==='zh2en'?'選出正確的英文':mode==='en2zh'?'選出正確的中文':mode==='type'?'打出中文意思':'拼出正確的英文'}</div></div>${body}`;
+  if(mode==='spell'||mode==='type')document.getElementById('in').focus();
   done=false}
 function record(ok){
   const w=qs[i];res.push({w,ok});let wk=weak();
@@ -297,6 +298,16 @@ function spell(){
   document.getElementById('in').disabled=true;
   document.getElementById('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ 答對了！':'✗ 正確答案：'+esc(w.en)}</div>`;
   document.getElementById('act').outerHTML=nextBtn()}
+function tchk(){
+  if(done)return;
+  const w=qs[i],v=document.getElementById('in').value.trim();
+  done=true;document.getElementById('in').disabled=true;
+  const norm=s=>s.replace(/[\s，,；;、（）()…]/g,'');
+  const parts=w.zh.split(/[，,；;]/).map(norm).filter(Boolean),nv=norm(v);
+  const hit=nv.length>0&&parts.some(p=>p===nv||(nv.length>=2&&p.includes(nv)));
+  document.getElementById('fb').innerHTML=`<div class="fb">你的答案：${esc(v)||'（空白）'}<br>正確答案：<span class="${hit?'ok':'no'}" style="font-weight:800">${esc(w.zh)}</span></div><div class="mut">意思相近就算對，自己判斷：</div>`;
+  document.getElementById('act').outerHTML=`<button class="go" onclick="grade(true)">✓ 我答對了${hit?'（系統看起來也對）':''}</button><button class="go red" onclick="grade(false)">✗ 答錯了</button>`}
+function grade(ok){record(ok);next()}
 function next(){if(i+1>=qs.length)summary();else{i++;quiz()}}
 function summary(){
   const c=res.filter(r=>r.ok).length,t=res.length,wr=res.filter(r=>!r.ok),p=Math.round(c/t*100);
