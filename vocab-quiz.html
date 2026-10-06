@@ -29,6 +29,37 @@ button{font:inherit;color:inherit;cursor:pointer}
 input{width:100%;font:inherit;font-size:18px;padding:14px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);margin-top:6px}
 .fb{margin:10px 0;font-weight:700}.fb.ok{color:var(--ok)}.fb.no{color:var(--no)}
 .wl div{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd);font-size:14px}.wl b{min-width:42%}
+
+.section-label{font-size:14px;font-weight:700;margin:18px 0 8px}
+.session-note{background:rgba(74,108,247,.1);border-radius:12px;padding:12px;font-size:14px;margin:12px 0}
+.hint{margin-top:14px;line-height:1.7}
+.q .w{overflow-wrap:anywhere;line-height:1.4}
+.opt{font-weight:600;font-size:16px;line-height:1.5;min-height:72px}
+.opt-letter{display:block;color:var(--mut);font-size:12px;margin-bottom:3px}
+button:disabled{cursor:default}.big:disabled{opacity:.5}
+.opt:disabled{color:var(--tx);opacity:1}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
+.answer-line{margin:8px 0;font-size:15px;line-height:1.6;overflow-wrap:anywhere}
+.learn{margin-top:14px;padding:16px;text-align:left}.learn .section-label{margin-top:0}
+.learn-row{border-top:1px solid var(--bd);padding:12px 0;line-height:1.7;overflow-wrap:anywhere}
+.learn-row:last-child{padding-bottom:0}.learn-heading{display:flex;gap:8px;align-items:baseline}
+.badge{font-size:12px;flex-shrink:0;color:var(--mut)}
+.learn-row.correct .learn-heading b{color:var(--ok)}
+.target{background:rgba(74,108,247,.07);border-radius:10px;padding:10px;border:0;margin-bottom:8px}
+.review-item{border-top:1px solid var(--bd);padding:12px 0}.review-item summary{cursor:pointer;font-weight:600;line-height:1.7;overflow-wrap:anywhere}
+.review-item summary .mut{display:block;margin-left:20px;font-weight:400}.review-item .learn{margin-bottom:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:360px){body{padding:10px}.card{padding:16px}.q .w{font-size:24px}.chip{padding:7px 11px}}
+
+.flash-card{display:block;width:100%;min-height:300px;margin-top:20px;text-align:center;cursor:pointer;color:var(--tx);font:inherit;touch-action:manipulation}
+.flash-word{display:block;font-size:32px;font-weight:800;line-height:1.4;overflow-wrap:anywhere;margin:12px 0 24px}
+.flash-meaning{display:block;font-size:26px;font-weight:700;color:var(--ac);margin-bottom:10px}
+.flash-pos{display:block;color:var(--mut);font-size:14px}
+.flash-other{display:block;color:var(--mut);font-size:14px;line-height:1.8;margin-top:14px}
+.flash-hint{display:block;color:var(--mut);font-size:15px;margin-top:34px}
+.flash-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.flash-actions .go{min-height:58px;margin:0;touch-action:manipulation}.go.green{background:#07895e}
+.flash-stats{text-align:center;font-size:14px;color:var(--mut);margin:14px 0}
 </style></head><body><div id="app"></div>
 <script>
 const A=`petty|小的
@@ -246,76 +277,454 @@ be based on|以…為基礎
 over time|經過一段時日
 make a difference|改善
 to date|到目前為止`;
-const parse=(t,s)=>t.split('\n').map(l=>{const[e,z]=l.split('|');return{en:e,zh:z,s}});
-const SETS={A:parse(A,'A'),B:parse(B,'B')};
-const ALL=[...SETS.A,...SETS.B];
+const C=`philosophy|哲學
+miserable|痛苦的
+sorrow|悲傷
+mutter|低聲嘀咕
+clasp|緊握
+fling|擲向
+weep|哭泣
+breast|胸脯
+pierce|刺穿
+merely|只是
+style|作風
+sincerity|誠心誠意
+sacrifice|犧牲
+meanwhile|在此期間
+blossom|開花
+marvelous|非凡的
+fierce|強烈的
+faint|虛弱的
+lean|傾斜
+pluck|採
+jewel|珠寶
+ungrateful|忘恩負義的
+prove|證明
+impractical|不切實際的
+depend on|視…而定
+toss and turn|輾轉難眠
+fade away|衰退
+shoot through|貫穿
+abundant|大量的
+plentiful|大量的
+scarce|稀少的
+abundance|大量`;
+const META_TEXT=`philosophy|n.|thought|哲學/哲學思想
+miserable|adj.|emotion|痛苦的/悲慘的/難受的
+sorrow|n.|emotion|悲傷/悲痛/悲哀
+mutter|v.|communication|低聲嘀咕/低聲說/喃喃自語/嘟囔
+clasp|v.|action|緊握/握緊/緊抓/抱緊
+fling|v.|movement|擲向/扔/擲/拋/猛扔
+weep|v.|emotion|哭泣/流淚/哭
+breast|n.|health|胸脯/胸部/乳房
+pierce|v.|action|刺穿/穿透/刺破
+merely|adv.|quality|只是/僅僅/只不過
+style|n.|arts|作風/風格/樣式
+sincerity|n.|ethics|誠心誠意/真誠/誠意/誠懇
+sacrifice|n./v.|action|犧牲/祭品/獻祭
+meanwhile|adv.|time|在此期間/同時/與此同時
+blossom|v./n.|nature|開花/綻放/花朵
+marvelous|adj.|quality|非凡的/極好的/奇妙的/了不起的
+fierce|adj.|quality|強烈的/猛烈的/兇猛的/激烈的
+faint|adj.|health|虛弱的/微弱的/模糊的
+lean|v.|movement|傾斜/倚靠/靠
+pluck|v.|action|採/採摘/摘/拔/拔出
+jewel|n.|object|珠寶/寶石
+ungrateful|adj.|ethics|忘恩負義的/不知感恩的/不感激的
+prove|v.|communication|證明/證實
+impractical|adj.|quality|不切實際的/不實用的/不實際的
+depend on|phr. v.|thought|視…而定/取決於/依靠/依賴
+toss and turn|phr. v.|health|輾轉難眠/輾轉反側/翻來覆去/翻來覆去睡不著
+fade away|phr. v.|change|衰退/逐漸消失/消退/消逝
+shoot through|phr. v.|movement|貫穿/穿過/穿透
+abundant|adj.|size|大量的/充足的/豐富的
+plentiful|adj.|size|大量的/充足的/豐富的
+scarce|adj.|size|稀少的/缺乏的/不足的
+abundance|n.|size|大量/充足/豐富
+petty|adj.|quality|微小的/瑣碎的/小的/不重要的/小氣的
+chaos|n.|disorder|混亂/混亂狀態/混沌
+shield|n.|object|盾/盾牌/防護物
+outsider|n.|people|局外人/外人/外來者
+unemployment|n.|society|失業/失業狀態
+burial|n.|death|埋葬/安葬/葬禮
+dough|n.|food|生麵團/麵團/麵糰/生麵糰
+complication|n.|health|併發症/並發症/複雜情況
+mattress|n.|object|床墊/床褥
+grant|v.|permission|答應/允許/准許/給予/授予
+curriculum|n.|education|課程/課程安排/學校課程
+sandal|n.|clothing|涼鞋/涼鞋子
+vocal|adj.|quality|聲音的/發聲的/嗓音的/直言不諱的
+smog|n.|nature|霧霾/煙霧/煙霧污染
+bully|n.|people|惡霸/霸凌者/欺負人的人
+climax|n.|event|高潮/最高潮/頂點
+gravity|n.|science|重力/地心引力/引力
+milestone|n.|event|里程碑/重要階段
+morality|n.|ethics|道德/道德觀/道德觀念
+mustard|n.|food|芥末/芥末醬
+stepchild|n.|people|繼子/繼女/繼子女
+soften|v.|change|變軟/軟化/使變軟/使柔和
+compliment|n./v.|communication|稱讚/讚美/恭維/贊美/讚美的話
+despair|n./v.|emotion|絕望/失去希望
+wither|v.|nature|枯萎/凋萎/凋謝
+stimulate|v.|influence|刺激/促進/激發
+flip|v.|movement|翻轉/翻動/翻面
+erupt|v.|nature|爆發/噴發/突然爆發
+nominate|v.|politics|提名/推薦
+implement|v.|action|實施/執行/落實
+migration|n.|movement|遷移/移居/移徙
+rigid|adj.|quality|嚴苛的/嚴格的/僵硬的/死板的
+suburban|adj.|place|郊區的/市郊的
+fragrant|adj.|quality|芳香的/香的/香氣撲鼻的
+deliberate|adj.|intent|故意的/蓄意的/深思熟慮的
+terminal|adj./n.|place|末端的/終點的/終點站/航廈/末端
+overwhelm|v.|influence|壓倒/使不知所措/使招架不住
+mortal|adj.|death|會死的/終有一死的/致命的
+pastry|n.|food|點心/酥皮點心/糕點/酥皮糕點
+straightforward|adj.|quality|坦率的/直率的/簡單明瞭的/直接的
+outfit|n.|clothing|全套服裝/整套服裝/服裝/裝備
+script|n.|arts|劇本/腳本
+texture|n.|quality|質地/紋理/觸感
+pedal|n.|object|踏板/腳踏板
+assumption|n.|thought|假定/假設/臆測
+lawsuit|n.|law|訴訟/官司/法律訴訟
+implication|n.|thought|暗示/含意/含義/可能的影響
+fatigue|n.|health|勞累/疲勞/疲倦/疲憊
+commodity|n.|commerce|貨物/商品/大宗商品
+antique|n./adj.|object|古董/古物/古老的/古董的
+seminar|n.|education|研討會/討論會/專題討論
+complexity|n.|thought|複雜性/複雜程度/困難/複雜
+appliance|n.|object|家電/家用電器/電器/器具
+vendor|n.|people|小販/攤販/販賣者/供應商/賣主
+spouse|n.|people|配偶/伴侶/另一半
+vinegar|n.|food|醋/食醋
+fabric|n.|clothing|布料/織物/布
+icon|n.|arts|圖像/圖示/偶像/代表人物
+syrup|n.|food|糖漿/甜漿
+legacy|n.|history|遺產/傳承/遺留下來的事物
+tackle|v.|action|處理/應付/解決/著手處理
+yield|v.|action|產生/生產/帶來/讓步
+update|n./v.|information|新資訊/最新資訊/更新/最新消息
+upgrade|n./v.|change|升級/提升/提高等級
+compromise|n./v.|agreement|讓步/妥協/折衷/折中
+embrace|v.|emotion|擁抱/接受/欣然接受
+depict|v.|arts|描繪/描寫/描述
+maple|n.|nature|楓樹/楓
+supervise|v.|action|監督/管理/監管
+prohibit|v.|permission|禁止/不准/不允許
+grip|n./v.|action|緊握/握緊/抓緊/握力
+tick|n.|object|勾號/打勾/勾/記號
+hostile|adj.|emotion|有敵意的/敵意的/敵對的/不友善的
+subtle|adj.|quality|細微的/微妙的/不易察覺的
+ultimate|adj.|time|最終的/最後的/終極的
+contemporary|adj.|time|當代的/現代的/同時代的
+structural|adj.|science|結構的/結構上的/結構性的
+indispensable|adj.|quality|不可或缺的/必不可少的/必要的
+vague|adj.|quality|模糊的/不明確的/含糊的
+overhead|adv./adj.|place|頭頂上/在頭頂上/上方/在上方/頭頂上的
+rehearsal|n.|arts|預演/排練/彩排
+superstition|n.|thought|迷信/迷信觀念
+profile|n.|information|人物簡介/簡介/個人檔案/側面輪廓
+locker|n.|object|置物櫃/儲物櫃/寄物櫃
+squash|n.|food|南瓜/筍瓜/瓜類
+currency|n.|commerce|貨幣/通貨/幣別
+recipient|n.|people|接受者/接收者/收件人/受領者
+respondent|n.|people|應答者/回答者/受訪者/答覆者
+scandal|n.|society|醜聞/丑聞
+republican|adj./n.|politics|共和主義的/共和的/共和主義者/共和黨的/共和黨人
+ballot|n.|politics|投票/選票/投票用紙
+realism|n.|thought|務實/現實主義/寫實主義/務實態度
+copyright|n.|law|版權/著作權
+rail|n.|object|鐵路/鐵軌/軌道/欄杆
+scar|n.|health|疤/疤痕/傷疤
+symptom|n.|health|症狀/病徵/徵兆
+resident|n.|people|居民/住戶/居住者
+projection|n.|thought|推測/預測/推估/投影
+circuit|n.|science|巡迴/巡迴路線/電路/迴路
+likelihood|n.|thought|可能性/可能/機率/概率
+accommodate|v.|action|容納/提供住宿/使適應
+whine|v.|communication|抱怨/發牢騷/哀鳴
+compensate|v.|commerce|補償/賠償/彌補
+applause|n.|communication|掌聲/鼓掌/喝采
+plunge|v.|movement|投入/跳入/墜落/猛跌
+exclude|v.|permission|排除/不包括/拒絕接納
+comprise|v.|composition|包含/包括/由…組成/由組成
+smash|v.|action|砸碎/打碎/粉碎/猛撞
+peek|v./n.|perception|偷看/窺視/瞥一眼
+inherit|v.|commerce|繼承/承襲
+derive|v.|action|得到/獲得/源自/衍生
+chubby|adj.|appearance|豐滿的/胖嘟嘟的/圓胖的/微胖的
+profound|adj.|thought|深奧的/深邃的/深刻的/深遠的
+compatible|adj.|agreement|能共處的/相容的/兼容的/合得來的
+immense|adj.|size|巨大的/龐大的/非常大/極大的/很大/超大
+nasty|adj.|emotion|惡毒的/討厭的/令人不快的/卑鄙的
+valid|adj.|quality|有效的/有效力的/合理的/有根據的
+resistant|adj.|permission|抗拒的/有抵抗力的/抵抗的/耐受的
+widespread|adj.|size|普遍的/廣泛的/遍及各地的
+institution|n.|society|機構/制度/組織
+tournament|n.|sport|錦標賽/比賽/競賽
+casino|n.|place|賭場/赌场
+dilemma|n.|thought|兩難/兩難困境/困境/進退兩難
+prejudice|n.|ethics|成見/偏見/歧視
+league|n.|sport|聯盟/聯賽/同盟
+sponsor|n.|people|贊助商/贊助者/贊助人/讚助商
+bound|n.|place|界限/範圍/限度
+boundary|n.|place|邊界/界線/分界/界限
+highlight|n./v.|information|精采之處/精彩之處/亮點/精采/精彩/強調/凸顯
+intent|n.|intent|意圖/目的/意向
+booth|n.|place|亭子/攤位/小隔間/電話亭
+abolish|v.|law|廢除/廢止/取消
+consent|n./v.|agreement|同意/允許/許可
+federal|adj.|politics|聯邦的/聯邦制的/聯邦政府的
+variation|n.|change|變化/差異/變異
+criterion|n.|thought|標準/準則/判斷標準
+debut|n./v.|event|初次亮相/首次亮相/出道/初登場
+reef|n.|nature|礁石/礁/暗礁
+sportsman|n.|people|運動家/運動員/運動選手
+deprive|v.|permission|剝奪/使喪失
+rival|n.|people|對手/競爭對手/敵手
+endorse|v.|communication|代言/支持/認可/背書
+glare|v./n.|perception|怒視/瞪/瞪視/刺眼的光
+resent|v.|emotion|憎惡/怨恨/憤恨/不滿
+adore|v.|emotion|非常喜愛/喜愛/熱愛/愛慕/崇拜
+exceed|v.|size|超出/超過/超越
+supreme|adj.|quality|最高的/至高的/最高級的
+strand|v.|movement|擱淺/使滯留/使困住
+simplify|v.|change|簡化/使簡單/使簡單化
+convert|v.|change|轉變/轉換/改變/改信
+abnormal|adj.|quality|不正常的/異常的/反常的
+masculine|adj.|appearance|男性的/陽剛的/男子氣概的/陽性的
+fabulous|adj.|quality|極好的/很棒的/極棒的/非常棒/棒極了
+fluid|n.|science|液體/流體
+prone|adj.|quality|有…傾向的/有傾向的/容易…的/容易的/易於
+reverse|v.|change|反轉/逆轉/顛倒/倒轉
+elaborate|adj.|quality|精心設計的/精巧的/詳盡的/複雜的
+sociable|adj.|emotion|善於社交的/好交際的/合群的/愛交際的
+alongside|prep./adv.|place|與…一起/與一起/在旁邊/在…旁邊/和一起/並肩
+journey|n.|movement|旅程/旅行/行程
+orbit|v./n.|science|繞軌道運行/繞行/環繞/軌道
+theory|n.|thought|理論/學說
+approach|v.|movement|近乎/接近/靠近/趨近
+countless|adj.|size|數不盡的/無數的/數不清的/不計其數的
+demonstrate|v.|communication|顯示/展示/示範/證明
+possess|v.|commerce|擁有/具有/持有
+undoubtedly|adv.|thought|無疑/毫無疑問/無庸置疑/無疑地
+historian|n.|people|歷史學家/史學家
+amazing|adj.|quality|令人驚奇的/驚人的/極好的/很棒的/令人驚嘆的
+witness|v./n.|perception|目擊/親眼見到/見證/目擊者/證人
+fleet|n.|movement|艦隊/船隊/車隊/機隊
+ablaze|adj.|nature|起火的/燃燒的/著火的/烈火熊熊的
+voyage|n.|movement|航海/航程/航行/遠航
+affect|v.|influence|影響/使感動
+contact|v./n.|communication|聯繫/聯絡/接觸
+alien|n.|people|外星人/外國人
+speculate|v.|thought|推斷/推測/猜測/推想
+chaotic|adj.|disorder|混亂的/混沌的/紊亂的
+restriction|n.|permission|限制/限制規定/約束
+threaten|v.|influence|危害/威脅/恐嚇
+existence|n.|thought|生存/存在/生活
+consequence|n.|event|結果/後果/影響
+make use of|phr. v.|action|利用/使用/運用
+leave…behind|phr. v.|movement|留下/遺留/把…留下/落下/拋在後面
+thanks to|phr. prep.|cause|多虧/幸虧/由於/歸功於
+in turn|phr. adv.|cause|因此/反過來/輪流/依次
+beyond one's imagination|phr. prep.|thought|超乎想像/超乎想象/超出想像/超乎想像力
+for the time being|phr. adv.|time|目前/暫時/眼下/暫且
+remarkable|adj.|quality|卓越的/非凡的/引人注目的/出色的
+murder|n./v.|death|謀殺/殺害/兇殺
+abduct|v.|action|綁架/劫持/擄走
+consume|v.|food|吃/消耗/耗費/消費
+confront|v.|action|面對/面臨/對抗/與…對峙
+oppression|n.|law|壓迫/壓制/欺壓
+enlist|v.|action|爭取/徵募/招募/入伍/從軍/爭取支持
+injustice|n.|ethics|不公不義/不公/不公平/不正義/不公正
+extend|v.|action|提供/延伸/延長/擴展/伸出
+solitary|adj.|people|獨自的/獨處的/孤獨的/單獨的
+confinement|n.|law|禁閉/監禁/拘禁/限制
+concept|n.|thought|概念/觀念/想法
+dramatic|adj.|arts|戲劇的/戲劇性的/劇烈的/引人注目的
+assistance|n.|action|援助/幫助/協助
+adopt|v.|action|採用/採納/收養
+non-violence|n.|ethics|非暴力/非暴力主義
+issue|n.|society|議題/問題/議論的主題
+demand|n.|commerce|需求/要求
+indigenous|adj.|place|本土的/原生的/土生土長的/原住民的
+correspondence|n.|communication|信件/通信/書信/往來信件
+plea|n.|communication|懇求/請求/呼籲
+commit|v.|intent|致力於/投入/承諾/犯下/做出
+at risk of|phr. prep.|quality|冒著…危險/冒著危險/有…風險/有風險/冒著…的危險
+be based on|phr. v.|thought|以…為基礎/以為基礎/基於/根據/建立在…之上
+over time|phr. adv.|time|經過一段時日/隨著時間/隨著時間推移/逐漸/經過一段時間
+make a difference|phr. v.|influence|改善/產生影響/有所影響/帶來改變/造成差異
+to date|phr. adv.|time|到目前為止/迄今/至今/截至目前
+`;
+const POS_LABELS={'n.':'名詞','v.':'動詞','adj.':'形容詞','adv.':'副詞','prep.':'介系詞','phr.':'片語'};
+const META=Object.fromEntries(META_TEXT.trim().split('\n').map(line=>{
+  const [en,pos,group,aliases]=line.split('|');return [en,{pos,group,aliases:aliases.split('/')}];
+}));
+const parse=(text,s)=>text.split('\n').map(line=>{
+  const [en,original]=line.split('|'),meta=META[en];
+  if(!meta)throw new Error('缺少單字資料：'+en);
+  return {en,zh:meta.aliases[0],original,s,...meta};
+});
+const SETS={A:parse(A,'A'),B:parse(B,'B'),C:parse(C,'C')};
+const ALL=[...SETS.A,...SETS.B,...SETS.C];
 const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const $=document.getElementById('app');
-const weak=()=>{try{return JSON.parse(localStorage.getItem('weak')||'[]')}catch(e){return[]}};
-const setWeak=a=>{try{localStorage.setItem('weak',JSON.stringify(a))}catch(e){}};
-let sel='all',mode,qs,i,streak,best,res,done;
-const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
-function pickSet(){const w=weak();return sel==='A'?SETS.A:sel==='B'?SETS.B:sel==='weak'?ALL.filter(x=>w.includes(x.en)):ALL}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const weak=()=>{try{const a=JSON.parse(localStorage.getItem('weak')||'[]');return Array.isArray(a)?a.filter(x=>ALL.some(w=>w.en===x)):[]}catch{return[]}};
+const setWeak=a=>{try{localStorage.setItem('weak',JSON.stringify(a))}catch{}};
+const readCount=()=>{try{const n=Number(localStorage.getItem('quiz-count'));return [30,50,100,0].includes(n)&&localStorage.getItem('quiz-count')!==null?n:30}catch{return 30}};
+let sel='all',count=readCount(),mode,qs=[],i=0,streak=0,best=0,res=[],done=false,currentOptions=[],answeredValue='',flashRevealed=false,flashActive=false;
+function pickSet(){const w=weak();return sel==='A'?SETS.A:sel==='B'?SETS.B:sel==='C'?SETS.C:sel==='weak'?ALL.filter(x=>w.includes(x.en)):ALL}
+function setCount(n){count=n;try{localStorage.setItem('quiz-count',String(n))}catch{}home()}
 function home(){
-  const wn=weak().length,n=pickSet().length;
-  $.innerHTML=`<div class="card"><h1>段考單字複習</h1><div class="mut">共 ${ALL.length} 個單字・答錯的會自動記起來</div>
-  <div class="row">${[['all','全部'],['A','單字表 (159)'],['B','課文詞彙 (56)'],['weak','弱項 ('+wn+')']].map(([k,l])=>`<button class="chip ${sel===k?'on':''}" onclick="sel='${k}';home()">${l}</button>`).join('')}</div>
-  <div class="mut">本次範圍：${n} 題</div>
-  ${[['zh2en','中文 → 英文','看中文，選英文'],['en2zh','英文 → 中文','看英文，選中文'],['type','英文 → 打中文','看英文，自己打中文，再自評'],['spell','拼字測驗','看中文，自己打英文']].map(([m,l,d])=>`<button class="big" onclick="start('${m}')"><b>${l}</b><span class="mut">${d}</span></button>`).join('')}</div>`}
+  flashActive=false;
+  const wn=weak().length,n=pickSet().length,actual=count?Math.min(count,n):n;
+  $.innerHTML=`<div class="card"><h1>段考單字複習</h1><div class="mut">${ALL.length} 個單字・答錯會自動加入弱項</div>
+  <div class="section-label">複習範圍</div><div class="row">${[['all','全部'],['A',`單字表 (${SETS.A.length})`],['B',`課文詞彙 (${SETS.B.length})`],['C',`新增單字 (${SETS.C.length})`],['weak',`弱項 (${wn})`]].map(([k,l])=>`<button class="chip ${sel===k?'on':''}" aria-pressed="${sel===k}" onclick="sel='${k}';home()">${l}</button>`).join('')}</div>
+  <div class="section-label">這次練幾題？</div><div class="row">${[30,50,100,0].map(n=>`<button class="chip ${count===n?'on':''}" aria-pressed="${count===n}" onclick="setCount(${n})">${n||'全部'}${n?' 題':''}</button>`).join('')}</div>
+  <div class="session-note">本次 ${actual} 題${n>actual?`・從 ${n} 字隨機抽題`:count>n?'・範圍不足時練完現有單字':''}</div>
+  ${[['zh2en','中文 → 英文','同詞性、相近主題與拼字的干擾選項'],['en2zh','英文 → 中文','選中文，作答後看全部選項的英文'],['flash','Flashcards 快速複習','看英文 → 翻開中文與詞性 → 自己按對錯'],['spell','拼字測驗','容許標點差異；5 字母以上容許 1 處誤植']].map(([m,l,d])=>`<button class="big" onclick="start('${m}')" ${n?'':'disabled'}><b>${l}</b><span class="mut">${d}</span></button>`).join('')}
+  <div class="mut hint">Flashcards 不用打字，評分後直接下一張。選「全部」就能快速翻完整份單字。</div></div>`;
+}
 function start(m,words){
-  const w=words||pickSet();if(!w.length){alert('這個範圍沒有單字');return}
-  mode=m;qs=sh(w);i=0;streak=0;best=0;res=[];done=false;quiz()}
+  const pool=words||pickSet();if(!pool.length){alert('這個範圍沒有單字');return}
+  mode=m;qs=sh(pool).slice(0,count||pool.length);i=0;streak=0;best=0;res=[];done=false;quiz();
+}
+const TRAD={'数':'數','尽':'盡','复':'複','团':'團','饼':'餅','面':'面','择':'擇','请':'請','构':'構','迁':'遷','胜':'勝','预':'預','际':'際','阶':'階','览':'覽','卧':'臥','鱼':'魚','线':'線','划':'劃','语':'語','业':'業','识':'識','无':'無','变':'變','为':'為','会':'會','与':'與','这':'這','个':'個','来':'來','过':'過','时':'時','间':'間','对':'對','动':'動','发':'發','学':'學','国':'國','爱':'愛','极':'極','恶':'惡','讨':'討','厌':'厭','虑':'慮','杂':'雜','乱':'亂','许':'許','给':'給','权':'權','货':'貨','币':'幣','联':'聯','继':'繼','绝':'絕','赞':'讚','补':'補','偿':'償','赔':'賠','迁':'遷','实':'實','际':'際','严':'嚴','软':'軟','满':'滿','广':'廣','边':'邊','纲':'綱','础':'礎','认':'認','观':'觀','态':'態','压':'壓','拥':'擁','点':'點','场':'場','舰':'艦','队':'隊','显':'顯','强':'強','调':'調','夺':'奪','简':'簡','质':'質','遗':'遺','图':'圖','执':'執','证':'證','见':'見','长':'長','险':'險','暂':'暫','费':'費','现':'現','闻':'聞','层':'層','够':'夠','单':'單','独':'獨','谋':'謀','杀':'殺','绑':'綁','义':'義','应':'應','资':'資','讯':'訊','电':'電','器':'器','烟':'煙','雾':'霧','轻':'輕','终':'終','倾':'傾','头':'頭','顶':'頂','进':'進','难':'難','视':'視','亲':'親','见':'見','礼':'禮','从':'從','军':'軍','访':'訪','运':'運','稳':'穩','导':'導','种':'種','块':'塊','换':'換','达':'達','级':'級','异':'異','肤':'膚','负':'負','获':'獲','轨':'軌','则':'則','标':'標','准':'準','称':'稱','侧':'側','祸':'禍','结':'結','联':'聯','络':'絡','锁':'鎖','储':'儲','柜':'櫃','销':'銷','农':'農','争':'爭','虑':'慮','闷':'悶','毕':'畢','赖':'賴'};
+function normZh(s){return String(s).normalize('NFKC').replace(/[\u3400-\u9fff]/g,c=>TRAD[c]||c).replace(/[\s，,。.!！?？；;、：:"'“”‘’（）()…⋯·\-]/g,'').replace(/的$/,'')}
+function acceptedZh(w){return [...new Set([w.original,...w.aliases].flatMap(a=>a.split(/[，,；;、]/)).map(normZh).filter(Boolean))]}
+function gradeChinese(value,w){
+  let v=value.trim().replace(/^(?:意思是|意思為|是指|就是|指的是|指)\s*[:：]?\s*/,'');
+  if(!v)return {ok:false,kind:'wrong'};
+  const answers=acceptedZh(w),parts=v.split(/[，,；;、\/]/).map(normZh).filter(Boolean);
+  // Require each supplied meaning to be a known synonym; never match arbitrary substrings.
+  return {ok:parts.length>0&&parts.every(p=>answers.includes(p)),kind:'auto'};
+}
+function normEn(s){return String(s).normalize('NFKC').toLowerCase().trim().replace(/[’‘`]/g,"'").replace(/(?:\.{2,}|…|⋯)/g,' ').replace(/['\-‐‑–—]/g,'').replace(/[.!?,;:]+$/,'').replace(/\s+/g,' ')}
+function distance(a,b){
+  const d=Array.from({length:a.length+1},(_,i)=>Array.from({length:b.length+1},(_,j)=>i===0?j:j===0?i:0));
+  for(let x=1;x<=a.length;x++)for(let y=1;y<=b.length;y++){
+    d[x][y]=Math.min(d[x-1][y]+1,d[x][y-1]+1,d[x-1][y-1]+(a[x-1]===b[y-1]?0:1));
+    if(x>1&&y>1&&a[x-1]===b[y-2]&&a[x-2]===b[y-1])d[x][y]=Math.min(d[x][y],d[x-2][y-2]+1);
+  }return d[a.length][b.length];
+}
+const OTHER_WORDS=new Set('effect accept except moral mortality desert dessert later latter quite quiet loose lose form from adopt adapt affect effective extinct extend expend compliment complement dairy diary plane plain trial trail angel angle aboard abroad coarse course price prize than then wander wonder consume costume except expect grant grand grip trip tick sick soft often genre gender republic public fabric fabricate faint saint acquaintance acquaintance'.split(' ').map(normEn));
+function gradeSpelling(value,w){
+  const v=normEn(value),a=normEn(w.en);if(v===a)return {ok:true,kind:value.trim().toLowerCase()===w.en.toLowerCase()?'exact':'format'};
+  const known=ALL.some(x=>normEn(x.en)===v)||OTHER_WORDS.has(v);
+  const typo=/^[a-z ]+$/.test(v)&&a.replace(/ /g,'').length>=5&&!known&&Math.abs(v.length-a.length)<=1&&distance(v,a)===1&&v.split(' ').length===a.split(' ').length;
+  return {ok:typo,kind:typo?'typo':'wrong'};
+}
+function posParts(w){return w.pos.split('/').map(s=>s.replace('phr. ','')).filter(p=>p!=='phr.')}
+function posText(w){if(w.pos.startsWith('phr.'))return w.pos+' 片語';return w.pos+' '+posParts(w).map(p=>POS_LABELS[p]||p).join('／')}
+function overlap(a,b){const aa=acceptedZh(a),bb=acceptedZh(b);return aa.some(x=>bb.includes(x))}
+function distractors(w){
+  const ranked=ALL.filter(x=>x.en!==w.en&&!overlap(w,x)).map(x=>{
+    const same=posParts(w).some(p=>posParts(x).includes(p)),semantic=x.group===w.group;
+    const a=normEn(w.en),b=normEn(x.en),similarity=1-distance(a,b)/Math.max(a.length,b.length);
+    const spelling=mode==='zh2en'?similarity*3:similarity;
+    return {w:x,score:(same?7:0)+(semantic?4:0)+spelling+Math.random()*1.4};
+  }).sort((a,b)=>b.score-a.score);
+  const selected=[];
+  for(const x of ranked){if(!selected.some(y=>overlap(x.w,y)))selected.push(x.w);if(selected.length===3)break}
+  return selected;
+}
 function quiz(){
-  const w=qs[i],pct=(i/qs.length)*100;
+  const w=qs[i],pct=(i/qs.length)*100;done=false;answeredValue='';currentOptions=[];
   let body;
-  if(mode==='spell'){body=`<input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="輸入英文" onkeydown="if(event.key==='Enter')spell()"><div id="fb"></div><button class="go" id="act" onclick="spell()">確認</button>`}
-  else if(mode==='type'){body=`<input id="in" autocomplete="off" placeholder="輸入中文意思" onkeydown="if(event.key==='Enter')tchk()"><div id="fb"></div><button class="go" id="act" onclick="tchk()">看答案</button>`}
-  else{
-    const others=sh(ALL.filter(x=>x.zh!==w.zh&&x.en!==w.en)).slice(0,3);
-    const o=sh([w,...others]);
-    body=`<div class="opts">${o.map((x,k)=>`<button class="opt" data-en="${esc(x.en)}" onclick="pick(this)">${esc(mode==='zh2en'?x.en:x.zh)}</button>`).join('')}</div><div id="fb"></div>`}
-  $.innerHTML=`<div class="top"><button class="chip" onclick="home()">← 返回</button><span class="chip">🔥 ${streak}</span></div>
+  if(mode==='flash'){flashRevealed=false;flashActive=true;renderFlash();return}
+  flashActive=false;
+  if(mode==='spell'){
+    const spellMode=mode==='spell';
+    body=`<form id="answer-form" onsubmit="event.preventDefault();submitInput(event)"><label class="sr-only" for="answer-input">${spellMode?'輸入英文':'輸入中文意思'}</label><input id="answer-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${spellMode?'輸入英文':'輸入中文意思'}" oncompositionstart="this.dataset.composing='1'" oncompositionend="this.dataset.composing='0'"><button class="go" id="act" type="submit">確認答案</button></form><div id="fb" aria-live="polite"></div>`;
+  }else{
+    currentOptions=sh([w,...distractors(w)]);
+    body=`<div class="opts">${currentOptions.map((x,k)=>`<button class="opt" data-option="${k}" onclick="pick(${k})"><span class="opt-letter">${String.fromCharCode(65+k)}</span>${esc(mode==='zh2en'?x.en:x.zh)}</button>`).join('')}</div><div id="fb" aria-live="polite"></div>`;
+  }
+  $.innerHTML=`<div class="top"><button class="chip" onclick="home()">← 返回</button><span id="streak" class="chip">🔥 ${streak}</span></div>
   <div class="bar"><i style="width:${pct}%"></i></div><div class="mut" style="text-align:right">${i+1} / ${qs.length}</div>
-  <div class="card q"><p class="w">${esc(mode==='en2zh'||mode==='type'?w.en:w.zh)}</p><div class="mut" style="margin-top:8px">${mode==='zh2en'?'選出正確的英文':mode==='en2zh'?'選出正確的中文':mode==='type'?'打出中文意思':'拼出正確的英文'}</div></div>${body}`;
-  if(mode==='spell'||mode==='type')document.getElementById('in').focus();
-  done=false}
-function record(ok){
-  const w=qs[i];res.push({w,ok});let wk=weak();
-  if(ok){streak++;best=Math.max(best,streak);wk=wk.filter(x=>x!==w.en)}else{streak=0;if(!wk.includes(w.en))wk.push(w.en)}
-  setWeak(wk)}
-function nextBtn(){const last=i+1>=qs.length;return`<button class="go" onclick="next()">${last?'查看結果':'下一題'} →</button>`}
-function pick(b){
-  if(done)return;done=true;const w=qs[i],ok=b.dataset.en===w.en;
-  document.querySelectorAll('.opt').forEach(x=>{if(x.dataset.en===w.en)x.classList.add('ok');else if(x===b)x.classList.add('no');else x.classList.add('dim')});
-  record(ok);
-  document.getElementById('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ 答對了！':'✗ 正確答案：'+esc(w.en)+'（'+esc(w.zh)+'）'}</div>`+nextBtn()}
-function spell(){
-  if(done){next();return}
-  const w=qs[i],v=document.getElementById('in').value.trim().toLowerCase().replace(/’/g,"'").replace(/\s+/g,' ');
-  if(!v)return;
-  const ans=w.en.toLowerCase().replace('…','...'),ok=v.replace('…','...')===ans||v===w.en.toLowerCase().replace('…','').replace(/\s+/g,' ');
-  done=true;record(ok);
-  document.getElementById('in').disabled=true;
-  document.getElementById('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ 答對了！':'✗ 正確答案：'+esc(w.en)}</div>`;
-  document.getElementById('act').outerHTML=nextBtn()}
-function tchk(){
-  if(done)return;
-  const w=qs[i],v=document.getElementById('in').value.trim();
-  done=true;document.getElementById('in').disabled=true;
-  const norm=s=>s.replace(/[\s，,；;、（）()…]/g,'');
-  const parts=w.zh.split(/[，,；;]/).map(norm).filter(Boolean),nv=norm(v);
-  const hit=nv.length>0&&parts.some(p=>p===nv||(nv.length>=2&&p.includes(nv)));
-  document.getElementById('fb').innerHTML=`<div class="fb">你的答案：${esc(v)||'（空白）'}<br>正確答案：<span class="${hit?'ok':'no'}" style="font-weight:800">${esc(w.zh)}</span></div><div class="mut">意思相近就算對，自己判斷：</div>`;
-  document.getElementById('act').outerHTML=`<button class="go" onclick="grade(true)">✓ 我答對了${hit?'（系統看起來也對）':''}</button><button class="go red" onclick="grade(false)">✗ 答錯了</button>`}
-function grade(ok){record(ok);next()}
-function next(){if(i+1>=qs.length)summary();else{i++;quiz()}}
+  <div class="card q"><p class="w">${esc(mode==='en2zh'||mode==='type'?w.en:w.zh)}</p><div class="mut" style="margin-top:8px">${mode==='zh2en'?'選出正確的英文':mode==='en2zh'?'選出正確的中文':mode==='type'?'輸入一個中文意思，系統自動判分':'拼出正確的英文'}</div></div>${body}`;
+  const input=document.getElementById('answer-input');if(input)input.focus();window.scrollTo(0,0);
+}
+function renderFlash(){
+  const w=qs[i],known=res.filter(r=>r.ok).length,missed=res.length-known;
+  $.innerHTML=`<div class="top"><button class="chip" onclick="home()">← 返回</button><span id="streak" class="chip">🔥 ${streak}</span></div>
+  <div class="bar"><i style="width:${i/qs.length*100}%"></i></div><div class="mut" style="text-align:right">${i+1} / ${qs.length}</div>
+  <button id="flash-card" class="card flash-card" aria-expanded="${flashRevealed}" onclick="flipFlash()"><span class="mut">${flashRevealed?'答案':'想想這個字的中文意思'}</span><span class="flash-word">${esc(w.en)}</span>
+  ${flashRevealed?`<span class="flash-meaning">${esc(w.zh)}</span><span class="flash-pos">${esc(posText(w))}</span><span class="flash-other">${esc(w.aliases.slice(1).join('／'))}</span>`:'<span class="flash-hint">點卡片翻開答案</span>'}</button>
+  ${flashRevealed?`<div class="flash-actions"><button class="go red" onclick="gradeFlash(false,${i})">✗ 答錯／還不熟</button><button class="go green" id="flash-correct" onclick="gradeFlash(true,${i})">✓ 答對／記得了</button></div>`:'<button class="go" id="flash-reveal" onclick="flipFlash()">翻開答案</button>'}
+  <div class="flash-stats" aria-live="polite">已答對 ${known}・答錯 ${missed}・剩下 ${qs.length-i}</div><div class="mut" style="text-align:center">${flashRevealed?'按對錯後直接下一張；答錯會加入弱項':'先回想，再翻開答案'}<br>電腦快捷鍵：空白鍵翻卡・← 答錯・→ 答對</div>`;
+  const focus=document.getElementById(flashRevealed?'flash-correct':'flash-reveal');if(focus)focus.focus({preventScroll:true});
+}
+function flipFlash(){
+  if(mode!=='flash'||!flashActive||flashRevealed||done)return;
+  flashRevealed=true;renderFlash();
+}
+function gradeFlash(ok,questionIndex){
+  if(mode!=='flash'||!flashActive||!flashRevealed||done||questionIndex!==i)return;
+  done=true;answeredValue=ok?'答對':'答錯';record(ok,'flash');next();
+}
+document.addEventListener('keydown',event=>{
+  if(mode!=='flash'||!flashActive||event.repeat||event.isComposing||event.ctrlKey||event.metaKey||event.altKey)return;
+  if(['INPUT','TEXTAREA','SELECT'].includes(event.target?.tagName))return;
+  if(event.code==='Space'){event.preventDefault();flipFlash()}
+  else if(flashRevealed&&['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();gradeFlash(event.key==='ArrowRight',i)}
+});
+function record(ok,kind){
+  const w=qs[i];res.push({w,ok,kind,value:answeredValue,options:[...currentOptions]});let wk=weak();
+  if(ok){streak++;best=Math.max(best,streak);if(kind!=='typo')wk=wk.filter(x=>x!==w.en)}else{streak=0;if(!wk.includes(w.en))wk.push(w.en)}
+  if(kind==='typo'&&!wk.includes(w.en))wk.push(w.en);
+  setWeak(wk);document.getElementById('streak').textContent='🔥 '+streak;
+}
+function nextBtn(){return `<button class="go" id="next-button" onclick="next()">${i+1>=qs.length?'查看結果':'下一題'} →</button>`}
+function wordRow(w,label,cls=''){
+  return `<div class="learn-row ${cls}"><div class="learn-heading">${label?`<span class="badge">${label}</span>`:''}<b>${esc(w.en)}</b></div><div>${esc(w.zh)}</div><div class="mut">${esc(posText(w))}</div></div>`;
+}
+function learningPanel(w,options,value){
+  return `<div class="card learn"><div class="section-label">${options.length?'題目與所有選項':'單字記憶'}</div>${wordRow(w,'題目','target')}
+  ${options.length?options.map((x,k)=>wordRow(x,`${String.fromCharCode(65+k)}${x.en===w.en?' ✓':x.en===value?' ← 你的答案':''}`,x.en===w.en?'correct':'')).join(''):`<div class="mut hint">可接受的意思：${esc([...new Set(w.aliases)].join('／'))}</div>`}</div>`;
+}
+function feedback(result){
+  const w=qs[i];done=true;record(result.ok,result.kind);
+  const input=document.getElementById('answer-input');if(input)input.disabled=true;
+  const act=document.getElementById('act');if(act)act.remove();
+  let message=result.ok?'✓ 答對了！':'✗ 答錯了';
+  if(result.kind==='typo')message='≈ 有 1 處拼字誤植，容錯算對；已加入弱項';
+  if(result.kind==='format')message='✓ 答對了！已忽略標點或格式差異';
+  document.getElementById('fb').innerHTML=`<div class="fb ${result.ok?'ok':'no'}">${message}</div>
+  ${input?`<div class="answer-line">你的答案：${esc(answeredValue)}</div>`:''}<div class="answer-line">標準答案：<b>${esc(w.en)}</b> — ${esc(w.zh)}</div>
+  ${mode==='type'&&!result.ok?'<div class="mut hint">未符合內建同義答案。可接受的寫法列在下方。</div>':''}${nextBtn()}${learningPanel(w,currentOptions,answeredValue)}`;
+  document.getElementById('next-button').focus({preventScroll:true});
+}
+function pick(k){
+  if(done||!currentOptions[k])return;
+  const w=qs[i];answeredValue=currentOptions[k].en;
+  document.querySelectorAll('.opt').forEach(x=>{
+    const option=currentOptions[Number(x.dataset.option)];x.disabled=true;
+    if(option.en===w.en)x.classList.add('ok');else if(Number(x.dataset.option)===k)x.classList.add('no');
+  });feedback({ok:answeredValue===w.en,kind:'choice'});
+}
+function submitInput(event){
+  const input=document.getElementById('answer-input');if(done||!input||input.dataset.composing==='1'||event?.isComposing)return;
+  answeredValue=input.value.trim();if(!answeredValue){input.focus();return}
+  if(mode==='spell')feedback(gradeSpelling(answeredValue,qs[i]));
+}
+function next(){if(!done)return;if(i+1>=qs.length)summary();else{i++;quiz()}}
+function toggleReview(){const items=[...document.querySelectorAll('.review-item')];const open=items.some(d=>!d.open);items.forEach(d=>d.open=open);document.getElementById('toggle-review').textContent=open?'收合全部詳解':'展開全部詳解'}
 function summary(){
-  const c=res.filter(r=>r.ok).length,t=res.length,wr=res.filter(r=>!r.ok),p=Math.round(c/t*100);
-  $.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:52px">${p===100?'🏆':p>=80?'🌟':p>=60?'👍':'💪'}</div><h1>測驗結束</h1>
-  <p>答對 <b>${c}</b>・答錯 <b>${wr.length}</b>・最高連勝 <b>${best}</b></p><div class="bar"><i style="width:${p}%"></i></div><div class="mut">${p}% 正確率</div>
-  <button class="go" onclick="start(mode,${'qs.map(x=>x)'})">🔄 再練一次</button>
+  flashActive=false;
+  const c=res.filter(r=>r.ok).length,t=res.length,wr=res.filter(r=>!r.ok),p=Math.round(c/t*100),typos=res.filter(r=>r.kind==='typo');
+  $.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:52px">${p===100?'🏆':p>=80?'🌟':p>=60?'👍':'💪'}</div><h1>${mode==='flash'?'複習完成':'測驗結束'}</h1>
+  <p>答對 <b>${c}</b>・答錯 <b>${wr.length}</b>・最高連勝 <b>${best}</b></p><div class="bar"><i style="width:${p}%"></i></div><div class="mut">${p}% 正確率${typos.length?`（含 ${typos.length} 題拼字容錯）`:''}</div>
+  <button class="go" onclick="start(mode,qs)">🔄 再練一次</button>
   ${wr.length?`<button class="go red" onclick="start(mode,res.filter(r=>!r.ok).map(r=>r.w))">❌ 只複習錯的（${wr.length}）</button>`:''}
+  ${typos.length?`<button class="go" onclick="start('spell',res.filter(r=>r.kind==='typo').map(r=>r.w))">✍️ 修正拼字（${typos.length}）</button>`:''}
   <button class="go ghost" onclick="home()">🏠 回首頁</button></div>
-  ${wr.length?`<div class="card wl"><div class="mut">答錯的單字</div>${wr.map(r=>`<div><b>${esc(r.w.en)}</b><span>${esc(r.w.zh)}</span></div>`).join('')}</div>`:''}`}
+  <div class="card"><div class="top"><b>全部題目詳解 (${t})</b><button class="chip" id="toggle-review" onclick="toggleReview()">展開全部詳解</button></div>
+  ${res.map((r,k)=>`<details class="review-item" ${r.ok&&r.kind!=='typo'?'':'open'}><summary>${r.ok?r.kind==='typo'?'≈':'✓':'✗'} ${k+1}. ${esc(r.w.en)}<span class="mut">${esc(r.w.zh)}</span></summary><div class="answer-line">${r.kind==='flash'?'自評結果':'你的答案'}：${esc(r.value)}${r.kind==='typo'?'（拼字容錯）':''}</div>${learningPanel(r.w,r.options,r.value)}</details>`).join('')}</div>`;
+  window.scrollTo(0,0);
+}
 home();
+
 </script></body></html>
